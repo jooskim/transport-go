@@ -33,6 +33,10 @@ func main() {
 
 			// register services
 
+			if err := platformServer.RegisterService(services.NewServiceSniffer(), services.ServiceSnifferChannel); err != nil {
+				return err
+			}
+
 			// ping-pong service
 			if err := platformServer.RegisterService(services.NewPingPongService(),
 				services.PingPongServiceChan); err != nil {
