@@ -7,9 +7,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"reflect"
+
 	"github.com/google/uuid"
 	"github.com/mitchellh/mapstructure"
-	"reflect"
 )
 
 // Direction int defining which way messages are travelling on a Channel.
@@ -42,7 +43,12 @@ type MessageHeader struct {
 
 // CastPayloadToType converts the raw interface{} typed Payload into the
 // specified object passed as an argument.
-func (m *Message) CastPayloadToType(typ interface{}) error {
+func (m *Message) CastPayloadToType(typ interface{}) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("cast panic: %v", r)
+		}
+	}()
 	var unwrappedResponse Response
 
 	// assert pointer type
