@@ -57,6 +57,10 @@ func main() {
 				return err
 			}
 
+			if err := platformServer.RegisterService(services.NewKafkaTestService(), services.KafkaTestChannel); err != nil {
+				return err
+			}
+
 			// start server
 			sysChan := make(chan os.Signal, 1)
 			platformServer.StartServer(sysChan)
